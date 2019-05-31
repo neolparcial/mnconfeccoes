@@ -44,11 +44,11 @@ class Page{
 
 	}
 
-	public function setTpl($name_template, $data = array(), $return_html = false){
+	public function setTpl($name, $data = array(), $returnHtml = false){
 
 		$this->setData($data);
 
-		return $this->tpl->draw($name_template, $return_html);
+		return $this->tpl->draw($name, $returnHtml);
 
 	}
 
