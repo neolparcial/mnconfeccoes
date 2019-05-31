@@ -4,7 +4,7 @@
 <section class="content-header">
   <h1>
     Page Header
-    <small>Optional description</small>
+    <small>Bem-vindo, <?php echo htmlspecialchars( $name, ENT_COMPAT, 'UTF-8', FALSE ); ?>.</small>
   </h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>

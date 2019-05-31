@@ -3,6 +3,8 @@
 namespace Hcode;
 
 use Rain\Tpl;
+use \Hcode\Model\User;
+use \Hcode\DB\Sql;
 
 class Page{
 
@@ -31,9 +33,28 @@ class Page{
 		$this->setData($this->options["data"]);
 
 		if ($this->options["header"] === true) {
-			$this->tpl->draw("header");
+			$this->setTpl("header", array(
+				"usuario"=>$this->loadById("desperson"),
+				"dtregister"=>$this->loadById("dtregister")
+			));
+			
 		}
 
+	}
+
+	public function loadById($field){
+
+		$sql = new Sql();
+
+		$currentId = $_SESSION[User::SESSION]['idperson'];
+
+		$results = $sql->select("SELECT * FROM tb_persons WHERE idperson = :ID", array(
+			":ID"=>$currentId			
+		));
+
+		$data = $results[0];
+
+		return $data[$field];
 	}
 
 	public function setData($data = array()){

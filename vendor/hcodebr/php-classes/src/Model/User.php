@@ -87,7 +87,7 @@ class User extends Model{
 		$this->setData($results[0]);
 
 	}
-
+	
 	public function get($iduser){
 
 		$sql = new Sql();
@@ -187,6 +187,19 @@ class User extends Model{
 
 		}
 
+	}
+
+	public static function validForgotDecrypt($code){
+
+		base64_decode($code);
+
+		openssl_encrypt(
+			json_encode($dataRecovery),
+			'AES-128-CBC',
+			SECRET,
+			0,
+			SECRET_IV
+		);
 	}
 
 }

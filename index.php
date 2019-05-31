@@ -25,10 +25,14 @@ $app->get('/', function() {
 $app->get('/admin', function() {
 
 	User::verifyLogin();
-    
+
+	$user = $_SESSION[User::SESSION]['deslogin'];
+
 	$page = new PageAdmin();
 
-	$page->setTpl("index");
+	$page->setTpl("index", array(
+		"name"=>$user
+	));
 
 });
 
@@ -182,6 +186,20 @@ $app->get("/admin/forgot/sent", function(){
 		"footer"=>false
 	]);
 	$page->setTpl("forgot-sent");
+
+});
+
+$app->get("/admin/forgot/reset", function(){
+
+	$user = User::validForgotDecrypt($GET_["code"]);
+
+	$page = new PageAdmin([
+		"header"=>false,
+		"footer"=>false
+	]);
+	$page->setTpl("forgot-reset", array(
+		"name"=>
+	));
 
 });
 
