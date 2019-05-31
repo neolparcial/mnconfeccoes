@@ -121,10 +121,9 @@ class User extends Model{
 
 		$sql = new Sql();
 
-		$sql->select("CALL sp_users_delete (:iduser)", array(
+		$sql->query("CALL sp_users_delete (:iduser)", array(
 			":iduser"=>$this->getiduser()
 		));
-
 	}
 
 }
