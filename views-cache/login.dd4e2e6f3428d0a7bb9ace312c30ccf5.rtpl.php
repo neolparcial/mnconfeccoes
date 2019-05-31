@@ -58,7 +58,7 @@
       </div>
     </form>
 
-    <a href="#">Recuperar minha senha</a><br>
+    <a href="/admin/forgot">Recuperar minha senha</a><br>
     <a href="register.html" class="text-center">Solicitar conta administrativa</a>
 
   </div>

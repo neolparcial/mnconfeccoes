@@ -4,6 +4,7 @@ namespace Hcode\Model;
 
 use \Hcode\DB\Sql;
 use \Hcode\Model;
+use \Hcode\Mailer;
 
 class User extends Model{
 
@@ -124,6 +125,68 @@ class User extends Model{
 		$sql->query("CALL sp_users_delete (:iduser)", array(
 			":iduser"=>$this->getiduser()
 		));
+	}
+
+	public static function getForgot($email){
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+			SELECT *
+			FROM tb_persons a
+			INNER JOIN tb_users b USING (idperson)
+			WHERE a.desemail = :EMAIL
+
+			", array(
+				":EMAIL"=>$email
+		));
+
+		if (count($results) === 0) {
+
+			throw new Exception("Não foi possivel recuperar a senha.");	
+
+		}else{
+
+			$data = $results[0];
+
+			$results2 = $sql->select("CALL sp_userspasswordsrecoveries_create(:iduser, :desip)", array(
+				":iduser"=>$data["iduser"],
+				":desip"=>$_SERVER["REMOTE_ADDR"]
+			));
+
+			if (count($results2) === 0) {
+
+				throw new Exception("Não foi possivel recuperar a senha.");
+
+			}else{
+
+				define('SECRET_IV', pack('a16', 'Mapedine_web_dev'));
+				define('SECRET', pack('a16', 'Mapedine_web_dev'));
+
+				$dataRecovery = $results2[0];
+
+				$code = base64_encode(openssl_encrypt(
+					json_encode($dataRecovery),
+					'AES-128-CBC',
+					SECRET,
+					0,
+					SECRET_IV
+				));
+
+				$link = "http://www.mapedine.com.br/admin/forgot/reset?code=$code";
+
+				$mailer = new Mailer($data["desemail"], $data["desperson"], "Redefinir senha da MN Confecções", "forgot", array(
+					"name"=>$data["desperson"],
+					"link"=>$link
+				));
+
+				$mailer->send();
+
+				return $data;
+			}
+
+		}
+
 	}
 
 }
